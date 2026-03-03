@@ -1,0 +1,65 @@
+<?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $name    = $_POST['name'];
+    $email   = $_POST['email'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
+
+    $mail = new PHPMailer(true);
+
+    try {
+
+        // SMTP SETTINGS
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'ahmedshaikh1234t@gmail.com';
+        $mail->Password   = 'ivoaxxoypntramdf'; // app password (no spaces)
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+
+        // FIX SSL issue (localhost ke liye helpful)
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ];
+
+        // Email Settings
+        $mail->setFrom('ahmedshaikh1234t@gmail.com', 'website');
+        $mail->addAddress('ahmedshaikh1234t@gmail.com');
+
+        $mail->isHTML(true);
+        $mail->Subject = "New Contact: " . $subject;
+        $mail->Body    = "
+            <h3>New Contact Message</h3>
+            <b>Name:</b> {$name} <br>
+            <b>Email:</b> {$email} <br>
+            <b>Subject:</b> {$subject} <br>
+            <b>Message:</b> {$message}
+        ";
+
+     $mail->send();
+
+echo "<script>
+alert('Your form has been submitted successfully ✅');
+window.location.href='index.html';
+</script>";
+exit();
+
+    } catch (Exception $e) {
+        echo "Mailer Error: " . $mail->ErrorInfo;
+    }
+}
+?>
