@@ -18,16 +18,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
 
-        // SMTP SETTINGS
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'ahmedshaikh1234t@gmail.com';
-        $mail->Password   = 'ivoaxxoypntramdf'; // app password (no spaces)
+        $mail->Password   = ''; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        // FIX SSL issue (localhost ke liye helpful)
+
         $mail->SMTPOptions = [
             'ssl' => [
                 'verify_peer' => false,
@@ -36,7 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ]
         ];
 
-        // Email Settings
         $mail->setFrom('ahmedshaikh1234t@gmail.com', 'website');
         $mail->addAddress('ahmedshaikh1234t@gmail.com');
 
