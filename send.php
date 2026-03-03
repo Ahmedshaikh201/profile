@@ -9,10 +9,28 @@ require 'PHPMailer/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $name    = $_POST['name'];
-    $email   = $_POST['email'];
-    $subject = $_POST['subject'];
-    $message = $_POST['message'];
+    $name    = trim($_POST['name']);
+    $email   = trim($_POST['email']);
+    $subject = trim($_POST['subject']);
+    $message = trim($_POST['message']);
+
+    // ✅ Validation
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        echo "<script>
+        alert('All fields are required ❌');
+        window.history.back();
+        </script>";
+        exit();
+    }
+
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>
+        alert('Invalid Email Format ❌');
+        window.history.back();
+        </script>";
+        exit();
+    }
 
     $mail = new PHPMailer(true);
 
@@ -25,7 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Password   = ''; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
-
 
         $mail->SMTPOptions = [
             'ssl' => [
@@ -48,13 +65,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <b>Message:</b> {$message}
         ";
 
-     $mail->send();
+        $mail->send();
 
-echo "<script>
-alert('Your form has been submitted successfully ✅');
-window.location.href='index.html';
-</script>";
-exit();
+        echo "<script>
+        alert('Your form has been submitted successfully ✅');
+        window.location.href='index.html';
+        </script>";
+        exit();
 
     } catch (Exception $e) {
         echo "Mailer Error: " . $mail->ErrorInfo;
